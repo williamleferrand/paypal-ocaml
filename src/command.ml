@@ -8,7 +8,7 @@
 open Lwt
 open Connection
 
-let set_express_checkout ?(layout=[]) return_url cancel_url amount desc unitary_price qty ?(email=None) connection = 
+let set_express_checkout ?(layout=[]) return_url cancel_url desc unitary_price qty ?(email=None) connection = 
    let request = 
      ( "METHOD", "SetExpressCheckout" ) :: 
        ( "USER", connection.username ) ::
@@ -27,15 +27,15 @@ let set_express_checkout ?(layout=[]) return_url cancel_url amount desc unitary_
        ( "L_DESC0", desc) ::  
        ( "L_AMT0", (string_of_float unitary_price)) :: 
        ( "L_QTY0", (string_of_int qty)) :: 
-       (*	  ( "HDRIMG", "http://www.corefarm.org/images/header_cow_paypal.png") ::
-		  ( "PAYFLOWCOLOR", "e0dbc5") ::
-		  ( "HDRBACKCOLOR", "e0dbc5") :: *)
+       (* ( "HDRIMG", "http://www.corefarm.com/images/paypalbackgr.png") ::
+       ( "PAYFLOWCOLOR", "e0dbc5") ::
+       ( "HDRBACKCOLOR", "e0dbc5") :: *)
        ( "LANDINGPAGE", "Billing") ::
        (match email with None -> layout | Some e -> ("EMAIL", e) :: layout) in
    Effector.send connection request 
    >>= fun s -> return (Netencoding.Url.dest_url_encoded_parameters s)
 
-let do_express_checkout connection token id ipn_url amount = 
+let do_express_checkout token id ipn_url amount connection = 
   let request = 
     	( "METHOD", "DoExpressCheckoutPayment" ) :: 
 	  ( "USER", connection.username ) ::
