@@ -1,0 +1,6 @@
+name="paypal"
+version="0.2"
+description="Paypal"
+requires="ocsigen, cryptokit, calendar, xmlm"
+archive(byte) = "paypal.cmo"
+archive(native) = "paypal.cmx"
